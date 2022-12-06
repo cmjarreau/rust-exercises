@@ -14,13 +14,9 @@ fn main() {
     };
     println!("The value you entered is: {n}");
 
-    // let mut counter = 1;
     let mut sequence: [usize; 1000] = [0; 1000];
     //make an array
     for number in 0..n {
-        // println!("number = {number}, counter = {counter}");
-        // println!("{number}");
-
         if number < 2 {
             sequence[number] = number;
         } else {
