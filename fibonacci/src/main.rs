@@ -14,11 +14,11 @@ fn main() {
     };
     println!("The value you entered is: {n}");
 
-    let mut sequence: [usize; 1000] = [0; 1000];
+    let mut sequence: [i128; 1000] = [0; 1000];
     //make an array
     for number in 0..n {
         if number < 2 {
-            sequence[number] = number;
+            sequence[number] = number as i128;
         } else {
             sequence[number] = sequence[number - 1] + sequence[number - 2];
         }
@@ -26,3 +26,7 @@ fn main() {
         println!("number: {number}, value: {index}");
     }
 }
+
+// fibonacci gets really big really quickly
+// 91million - lets say 100 million     =                 100,000,000
+//                      354 quintillion = 354,224,848,179,261,915,075
