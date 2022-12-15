@@ -49,14 +49,14 @@ fn mode(vect: Vec<i32>) {
         *count += 1;
     }
 
-    let mut maxKey = 0;
-    let mut maxValue = 0;
+    let mut max_key = 0;
+    let mut max_value = 0;
     for (key, value) in &map {
-        if value > &maxValue {
-            maxValue = *value;
-            maxKey = *key;
+        if value > &max_value {
+            max_value = *value;
+            max_key = *key;
         }
         // println!("{}: {}", key, value);
     }
-    println!("mode - {}: occurs {} times", maxKey, maxValue);
+    println!("mode - {}: occurs {} times", max_key, max_value);
 }
