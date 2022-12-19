@@ -23,9 +23,10 @@ fn main() {
         io::stdin()
             .read_line(&mut selected_op)
             .expect("Failed to read line");
+        // validates input: if invalid return 0 (which exits the program below)
         let selected_op: u32 = match selected_op.trim().parse() {
             Ok(num) => num,
-            Err(_) => 3,
+            Err(_) => 0,
         };
 
         match selected_op {
@@ -38,61 +39,65 @@ fn main() {
 
 fn add_employee(employee_data: &mut HashMap<String, String>) {
     println!("add employee to department: ");
+
     let mut input = String::new();
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read line");
 
+    // chop off the word 'add ' from the front of the string
     let modified_input = &input[4..input.len()];
     // parse name
     let name = parser(modified_input, "name");
     // parse department
     let department = parser(modified_input, "department");
-
-    // now you are at the step of storing - hash map and vectors
-    // let mut employee_data = HashMap::new();
+    // add the info to the hash map
     employee_data.insert(String::from(name), String::from(department));
 }
 
 fn parser<'a>(input: &'a str, property_to_parse: &'a str) -> &'a str {
-    let mut property = input;
+    let property = input;
+    let parsed_property = match property_to_parse {
+        "name" => parse_name(property),
+        _ => parse_department(property),
+    };
+    parsed_property
+}
 
+fn parse_name(property: &str) -> &str {
+    let mut end_index = 0;
     let mut count = 0;
+    // parse name
+    for letter in property.chars() {
+        if letter.to_string() == " " {
+            end_index = count;
+            break;
+        }
+        count += 1;
+    }
+    let name = &property[0..end_index];
+    name
+}
 
-    if property_to_parse == "name" {
-        let mut end_index = 0;
-        // parse name
-        for letter in property.chars() {
-            if letter.to_string() == " " {
-                end_index = count;
+fn parse_department(property: &str) -> &str {
+    let mut start_index = 0;
+    let mut count_spaces = 0;
+    let mut count = 0;
+    // parse department
+    for letter in property.chars() {
+        if letter.to_string() == " " {
+            count_spaces += 1;
+
+            if count_spaces > 1 {
+                start_index = count + 1;
                 break;
             }
-            count += 1;
         }
-        property = &property[0..end_index];
-        property
-    } else if property_to_parse == "department" {
-        let mut start_index = 0;
-        let mut count_spaces = 0;
-
-        for letter in property.chars() {
-            if letter.to_string() == " " {
-                count_spaces += 1;
-
-                if count_spaces > 1 {
-                    start_index = count + 1;
-                    break;
-                }
-            }
-            count += 1;
-        }
-
-        property = &property[start_index..property.len() - 1];
-        property
-    } else {
-        property = "please provide a property";
-        property
+        count += 1;
     }
+
+    let department = &property[start_index..property.len() - 1];
+    department
 }
 
 fn sort_directory(employee_data: &mut HashMap<String, String>) {
