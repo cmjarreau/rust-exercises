@@ -12,7 +12,7 @@ use std::collections::HashMap;
 use std::io;
 
 fn main() {
-    let mut employee_data = HashMap::new();
+    let employee_data = &mut HashMap::new();
 
     loop {
         println!("select an operation: ");
@@ -28,30 +28,21 @@ fn main() {
             Err(_) => 3,
         };
 
-        if selected_op == 3 {
-            println!("exiting");
-            break;
-        } else if selected_op == 1 {
-            println!("add employee to department: ");
-            let mut input = String::new();
-            io::stdin()
-                .read_line(&mut input)
-                .expect("Failed to read line");
-
-            add_employee(&input, &mut employee_data);
-        } else if selected_op == 2 {
-            let mut hash_to_vec: Vec<(&String, &String)> = employee_data.iter().collect();
-            hash_to_vec.sort();
-
-            println!("employee data: {:?}", hash_to_vec);
-        } else {
-            println!("unsupported operation");
-            break;
+        match selected_op {
+            1 => add_employee(employee_data),
+            2 => sort_directory(employee_data),
+            _ => break,
         }
     }
 }
 
-fn add_employee(input: &str, employee_data: &mut HashMap<String, String>) {
+fn add_employee(employee_data: &mut HashMap<String, String>) {
+    println!("add employee to department: ");
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
+
     let modified_input = &input[4..input.len()];
     // parse name
     let name = parser(modified_input, "name");
@@ -102,4 +93,10 @@ fn parser<'a>(input: &'a str, property_to_parse: &'a str) -> &'a str {
         property = "please provide a property";
         property
     }
+}
+
+fn sort_directory(employee_data: &mut HashMap<String, String>) {
+    let mut hash_to_vec: Vec<(&String, &String)> = employee_data.iter().collect();
+    hash_to_vec.sort();
+    println!("directory: {:?}", hash_to_vec);
 }
